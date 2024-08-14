@@ -44,9 +44,9 @@ class BarcodeScanningPageState extends State<BarcodeScanningPage> {
   void _copyBarcodeValue(String value) {
     log('Copied: $value');
     ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('Copied: $value'),
-        duration: Duration(seconds: 2),
+      SnackBar(
+        content: Text("Copied: $value"),
+        duration: const Duration(seconds: 2),
         // Other properties like duration, action, etc.
       ),
     );
