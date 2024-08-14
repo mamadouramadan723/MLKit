@@ -22,7 +22,7 @@ class BarcodeScanningPageState extends State<BarcodeScanningPage> {
 
   Future<void> _pickImage() async {
     final pickedFile =
-    await ImagePicker().pickImage(source: ImageSource.gallery);
+        await ImagePicker().pickImage(source: ImageSource.gallery);
     if (pickedFile != null) {
       setState(() {
         _image = File(pickedFile.path);
@@ -35,10 +35,9 @@ class BarcodeScanningPageState extends State<BarcodeScanningPage> {
     if (_image != null) {
       final inputImage = InputImage.fromFilePath(_image!.path);
       final List<Barcode> barcodes =
-      await _barcodeScanner.processImage(inputImage);
+          await _barcodeScanner.processImage(inputImage);
       setState(() {
-        _scannedResults =
-            barcodes.map((barcode) => barcode.rawValue!).toList();
+        _scannedResults = barcodes.map((barcode) => barcode.rawValue!).toList();
       });
     }
   }
@@ -91,7 +90,7 @@ class BarcodeScanningPageState extends State<BarcodeScanningPage> {
               const SizedBox(width: 10),
               ElevatedButton(
                 onPressed: _scanFromCamera,
-                child: const Text('Scan from Camera'),
+                child: const Text('Scan Code'),
               ),
             ],
           ),
