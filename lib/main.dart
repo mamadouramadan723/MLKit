@@ -5,21 +5,25 @@ import 'feature/BarcodeScanningPage.dart';
 import 'feature/FaceDetectionPage.dart';
 
 void main() {
-  runApp(MyApp());
+  WidgetsFlutterBinding.ensureInitialized();
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'ML Kit APIs',
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: MyHomePage(title: 'ML Kit APIs'),
+      home: const MyHomePage(title: 'ML Kit APIs'),
       routes: {
-        '/barcode_scanning': (context) => BarcodeScanningPage(),
-        '/face_detection': (context) => FaceDetectionPage(),
+        '/barcode_scanning': (context) => const BarcodeScanningPage(),
+        '/face_detection': (context) => const FaceDetectionPage(),
         // Add more routes for other features
       },
     );
@@ -29,7 +33,7 @@ class MyApp extends StatelessWidget {
 class MyHomePage extends StatelessWidget {
   final String title;
 
-  MyHomePage({Key? key, required this.title}) : super(key: key);
+  const MyHomePage({super.key, required this.title});
 
   @override
   Widget build(BuildContext context) {
@@ -37,10 +41,10 @@ class MyHomePage extends StatelessWidget {
       appBar: AppBar(
         title: Text(title),
       ),
-      body: Center(
+      body: const Center(
         child: Text('Main Page'),
       ),
-      drawer: Sidebar(),
+      drawer: const Sidebar(),
     );
   }
 }
