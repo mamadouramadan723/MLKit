@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_mlkit_barcode_scanning/google_mlkit_barcode_scanning.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:qrscan/qrscan.dart' as scanner;
 
 class BarcodeScanningPage extends StatefulWidget {
   const BarcodeScanningPage({super.key});
@@ -20,7 +21,8 @@ class BarcodeScanningPageState extends State<BarcodeScanningPage> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   Future<void> _pickImage() async {
-    final pickedFile = await ImagePicker().pickImage(source: ImageSource.gallery);
+    final pickedFile =
+    await ImagePicker().pickImage(source: ImageSource.gallery);
     if (pickedFile != null) {
       setState(() {
         _image = File(pickedFile.path);
@@ -29,22 +31,33 @@ class BarcodeScanningPageState extends State<BarcodeScanningPage> {
     }
   }
 
-  Future<void> _scanFromCamera() async {
-    final pickedFile = await ImagePicker().pickImage(source: ImageSource.camera);
-    if (pickedFile != null) {
-      setState(() {
-        _image = File(pickedFile.path);
-      });
-      await _scanBarcodes();  // Scan the image for QR codes
-    }
-  }
-
   Future<void> _scanBarcodes() async {
     if (_image != null) {
       final inputImage = InputImage.fromFilePath(_image!.path);
-      final List<Barcode> barcodes = await _barcodeScanner.processImage(inputImage);
+      final List<Barcode> barcodes =
+      await _barcodeScanner.processImage(inputImage);
       setState(() {
-        _scannedResults = barcodes.map((barcode) => barcode.rawValue!).toList();
+        _scannedResults =
+            barcodes.map((barcode) => barcode.rawValue!).toList();
+      });
+    }
+  }
+
+  Future<void> _scanFromCamera() async {
+    try {
+      final result = await scanner.scan();
+      if (result != null) {
+        setState(() {
+          _scannedResults = [result];
+        });
+      } else {
+        setState(() {
+          _scannedResults = ['No barcode scanned'];
+        });
+      }
+    } catch (e) {
+      setState(() {
+        _scannedResults = ['Error: $e'];
       });
     }
   }
