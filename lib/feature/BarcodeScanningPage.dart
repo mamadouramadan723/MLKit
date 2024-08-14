@@ -15,13 +15,12 @@ class BarcodeScanningPage extends StatefulWidget {
 class BarcodeScanningPageState extends State<BarcodeScanningPage> {
   File? _image;
   final BarcodeScanner _barcodeScanner = BarcodeScanner();
-  List<Barcode> _barcodes = [];
+  List<String> _scannedResults = [];
 
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   Future<void> _pickImage() async {
-    final pickedFile =
-        await ImagePicker().pickImage(source: ImageSource.gallery);
+    final pickedFile = await ImagePicker().pickImage(source: ImageSource.gallery);
     if (pickedFile != null) {
       setState(() {
         _image = File(pickedFile.path);
@@ -30,22 +29,28 @@ class BarcodeScanningPageState extends State<BarcodeScanningPage> {
     }
   }
 
+  Future<void> _scanFromCamera() async {
+    final pickedFile = await ImagePicker().pickImage(source: ImageSource.camera);
+    if (pickedFile != null) {
+      setState(() {
+        _image = File(pickedFile.path);
+      });
+      await _scanBarcodes();  // Scan the image for QR codes
+    }
+  }
+
   Future<void> _scanBarcodes() async {
     if (_image != null) {
       final inputImage = InputImage.fromFilePath(_image!.path);
-      final List<Barcode> barcodes =
-          await _barcodeScanner.processImage(inputImage);
+      final List<Barcode> barcodes = await _barcodeScanner.processImage(inputImage);
       setState(() {
-        _barcodes = barcodes;
+        _scannedResults = barcodes.map((barcode) => barcode.rawValue!).toList();
       });
     }
   }
 
   void _copyBarcodeValue(String value) {
-    // Copy the value to the clipboard
     Clipboard.setData(ClipboardData(text: value));
-
-    // Show a snackbar to indicate successful copy
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text('Copied: $value'),
@@ -63,26 +68,34 @@ class BarcodeScanningPageState extends State<BarcodeScanningPage> {
       ),
       body: Column(
         children: [
-          Expanded(
-            child: _image != null
-                ? Image.file(_image!)
-                : const Center(child: Text('No image selected')),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              ElevatedButton(
+                onPressed: _pickImage,
+                child: const Text('Pick Image'),
+              ),
+              const SizedBox(width: 10),
+              ElevatedButton(
+                onPressed: _scanFromCamera,
+                child: const Text('Scan from Camera'),
+              ),
+            ],
           ),
-          ElevatedButton(
-            onPressed: _pickImage,
-            child: const Text('Pick Image'),
-          ),
+          if (_image != null)
+            Expanded(
+              child: Image.file(_image!),
+            ),
           Expanded(
             child: ListView.builder(
-              itemCount: _barcodes.length,
+              itemCount: _scannedResults.length,
               itemBuilder: (context, index) {
-                final barcode = _barcodes[index];
+                final result = _scannedResults[index];
                 return ListTile(
-                  title: SelectableText(barcode.rawValue!),
-                  subtitle: Text(barcode.format.toString()),
+                  title: SelectableText(result),
                   trailing: IconButton(
                     icon: const Icon(Icons.copy),
-                    onPressed: () => _copyBarcodeValue(barcode.rawValue!),
+                    onPressed: () => _copyBarcodeValue(result),
                   ),
                 );
               },
