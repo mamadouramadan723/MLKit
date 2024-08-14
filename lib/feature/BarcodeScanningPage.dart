@@ -1,7 +1,7 @@
-import 'dart:developer';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:google_mlkit_barcode_scanning/google_mlkit_barcode_scanning.dart';
 import 'package:image_picker/image_picker.dart';
 
@@ -42,12 +42,14 @@ class BarcodeScanningPageState extends State<BarcodeScanningPage> {
   }
 
   void _copyBarcodeValue(String value) {
-    log('Copied: $value');
+    // Copy the value to the clipboard
+    Clipboard.setData(ClipboardData(text: value));
+
+    // Show a snackbar to indicate successful copy
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Text("Copied: $value"),
+        content: Text('Copied: $value'),
         duration: const Duration(seconds: 2),
-        // Other properties like duration, action, etc.
       ),
     );
   }
