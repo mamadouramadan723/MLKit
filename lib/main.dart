@@ -3,7 +3,7 @@ import 'package:mlkit/sidebar.dart';
 
 import 'feature/BarcodeScanningPage.dart';
 import 'feature/FaceDetectionPage.dart';
-import 'feature/face/Shape.dart';
+import 'feature/FaceSharp.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -24,7 +24,7 @@ class MyApp extends StatelessWidget {
       home: const MyHomePage(title: 'ML Kit APIs'),
       routes: {
         '/barcode_scanning': (context) => const BarcodeScanningPage(),
-        '/face_detection': (context) => const Shapes(),
+        '/face_detection': (context) => const FaceSharp(),
         // Add more routes for other features
       },
     );
