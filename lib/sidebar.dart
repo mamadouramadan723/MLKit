@@ -48,6 +48,13 @@ class Sidebar extends StatelessWidget {
           ),
           ListTile(
             leading: Icon(Icons.face_retouching_natural),
+            title: Text('Real Time Face Detection'),
+            onTap: () {
+              Navigator.pushNamed(context, '/realtime_face_detection');
+            },
+          ),
+          ListTile(
+            leading: Icon(Icons.face_retouching_natural),
             title: Text('Face Mesh Detection'),
             onTap: () {
               Navigator.pushNamed(context, '/face_mesh_detection');
