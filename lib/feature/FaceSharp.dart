@@ -1,6 +1,6 @@
 import 'dart:io';
 import 'dart:math';
-import 'dart:ui';
+import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
 import 'package:google_mlkit_face_detection/google_mlkit_face_detection.dart';
@@ -17,7 +17,7 @@ class _FaceSharpState extends State<FaceSharp> {
   late ImagePicker picker;
   dynamic faceDetector;
   File? img;
-  dynamic image;
+  ui.Image? image;
   late List<Face> faces;
   String result = '';
 
@@ -77,10 +77,10 @@ class _FaceSharpState extends State<FaceSharp> {
   }
 
   drawRectangelAroundFaces() async {
-    image = await img!.readAsBytes();
-    image = await decodeImageFromList(image);
+    final bytes = await img!.readAsBytes();
+    final uiImage = await decodeImageFromList(bytes);
     setState(() {
-      image;
+      image = uiImage;
       result;
     });
   }
@@ -93,7 +93,7 @@ class _FaceSharpState extends State<FaceSharp> {
         body: Container(
           decoration: const BoxDecoration(
             image: DecorationImage(
-              image: AssetImage('images/bg.jpg'),
+              image: AssetImage('assets/logoo.png'),
               fit: BoxFit.cover,
             ),
           ),
@@ -114,28 +114,6 @@ class _FaceSharpState extends State<FaceSharp> {
                         ),
                         onPressed: imgFromGallery,
                         onLongPress: imgFromCamera,
-                        /* child: Container(
-                          margin: const EdgeInsets.only(top: 10),
-                          child: img != null
-                              ? Image.file(
-                                  img!,
-                                  height: 440,
-                                  width: 340,
-                                )
-                              : Container(
-                                  height: 330,
-                                  width: 340,
-                                  decoration: BoxDecoration(
-                                    color: Colors.grey,
-                                    borderRadius: BorderRadius.circular(20),
-                                  ),
-                                  child: const Icon(
-                                    Icons.camera_alt,
-                                    color: Colors.white,
-                                    size: 100,
-                                  ),
-                                ),
-                        ),*/
                         child: Container(
                           width: 335,
                           height: 450,
@@ -144,8 +122,8 @@ class _FaceSharpState extends State<FaceSharp> {
                               ? Center(
                                   child: FittedBox(
                                     child: SizedBox(
-                                      width: image.width.toDouble(),
-                                      height: image.height.toDouble(),
+                                      width: image!.width.toDouble(),
+                                      height: image!.height.toDouble(),
                                       child: CustomPaint(
                                         painter: FacePainter(
                                           faceList: faces,
@@ -195,17 +173,17 @@ class _FaceSharpState extends State<FaceSharp> {
 
 class FacePainter extends CustomPainter {
   List<Face> faceList;
-  dynamic imageFile;
+  ui.Image? imageFile;
 
   FacePainter({required this.faceList, required this.imageFile});
 
   @override
   void paint(Canvas canvas, Size size) {
     if (imageFile != null) {
-      canvas.drawImage(imageFile, Offset.zero, Paint());
+      canvas.drawImage(imageFile!, Offset.zero, Paint());
     }
 
-    //For drawing the Rectangle in Faces
+    // For drawing the Rectangle in Faces
     Paint p = Paint();
     p.color = Colors.green;
     p.style = PaintingStyle.stroke;
@@ -214,7 +192,7 @@ class FacePainter extends CustomPainter {
       canvas.drawRect(face.boundingBox, p);
     }
 
-    //For Drawing the point in face contours like eye, mouth etc...
+    // For Drawing the point in face contours like eye, mouth etc...
     Paint p2 = Paint();
     p2.color = Colors.green;
     p2.style = PaintingStyle.stroke;
@@ -229,11 +207,11 @@ class FacePainter extends CustomPainter {
             Offset offset = Offset(p.x.toDouble(), p.y.toDouble());
             offsetPoints.add(offset);
           }
-          canvas.drawPoints(PointMode.points, offsetPoints, p2);
+          canvas.drawPoints(ui.PointMode.points, offsetPoints, p2);
         }
       });
 
-      //For Drawing the Rectangle on the left ear.
+      // For Drawing the Rectangle on the left ear.
       Paint p3 = Paint();
       p3.color = Colors.yellow;
       p3.style = PaintingStyle.stroke;
