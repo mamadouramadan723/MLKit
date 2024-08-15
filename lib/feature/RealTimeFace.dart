@@ -100,12 +100,12 @@ class _RealTimeFaceDetectionPageState extends State<RealTimeFaceDetectionPage>
     final Size imageSize = Size(img!.width.toDouble(), img!.height.toDouble());
     final camera = description;
     final imageRotation =
-    InputImageRotationValue.fromRawValue(camera.sensorOrientation);
+        InputImageRotationValue.fromRawValue(camera.sensorOrientation);
     final inputImageFormat =
-    InputImageFormatValue.fromRawValue(img!.format.raw);
+        InputImageFormatValue.fromRawValue(img!.format.raw);
 
     final planeData = img!.planes.map(
-          (Plane plane) {
+      (Plane plane) {
         return InputImageMetadata(
           bytesPerRow: plane.bytesPerRow,
           size: imageSize,
@@ -134,7 +134,7 @@ class _RealTimeFaceDetectionPageState extends State<RealTimeFaceDetectionPage>
       controller.value.previewSize!.width,
     );
     CustomPainter paint =
-    FaceDetectorPainter(imgSize, _scannedFaces!, camDirection);
+        FaceDetectorPainter(imgSize, _scannedFaces!, camDirection);
     return CustomPaint(
       painter: paint,
     );
@@ -296,12 +296,10 @@ class FaceDetectorPainter extends CustomPainter {
       String emotionText;
       if (face.smilingProbability != null) {
         final smileProb = face.smilingProbability!;
-        if (smileProb > 0.8) {
+        if (smileProb >= 0.9) {
           emotionText = '😁 Very Happy';
-        } else if (smileProb > 0.6) {
+        } else if (smileProb >= 0.6) {
           emotionText = '😊 Happy';
-        } else if (smileProb > 0.4) {
-          emotionText = '🙂 Content';
         } else if (smileProb > 0.2) {
           emotionText = '😐 Neutral';
         } else {
