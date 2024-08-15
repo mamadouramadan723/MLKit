@@ -1,17 +1,12 @@
-import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:mlkit/sidebar.dart';
 
 import 'feature/BarcodeScanningPage.dart';
 import 'feature/FaceDetectionPage.dart';
-import 'feature/face/FaceSharpingPage.dart';
+import 'feature/face/Shape.dart';
 
-List<CameraDescription> cameras = [];
-
-void main() async{
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  cameras = await availableCameras();
-
   runApp(const MyApp());
 }
 
@@ -29,7 +24,7 @@ class MyApp extends StatelessWidget {
       home: const MyHomePage(title: 'ML Kit APIs'),
       routes: {
         '/barcode_scanning': (context) => const BarcodeScanningPage(),
-        '/face_detection': (context) => const FaceSharpingPage(),
+        '/face_detection': (context) => const Shapes(),
         // Add more routes for other features
       },
     );
