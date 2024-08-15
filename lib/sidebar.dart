@@ -28,7 +28,7 @@ class Sidebar extends StatelessWidget {
                 fit: BoxFit.cover,
                 colorFilter: ColorFilter.mode(
                     Colors.blueAccent.withOpacity(0.6), BlendMode.dstATop),
-                image: AssetImage('assets/sidebar_background.jpg'), // Add a background image
+                image: AssetImage('assets/myLogo.png'), // Add a background image
               ),
             ),
           ),
